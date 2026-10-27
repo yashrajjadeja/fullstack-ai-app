@@ -1,0 +1,8 @@
+﻿# backend/.dockerignore
+# Skip the virtual environment — Docker installs its own packages
+.venv
+# Compiled Python files are not needed inside the image
+__pycache__
+*.pyc
+# .env stays on your PC; secrets go into docker-compose environment section
+.env

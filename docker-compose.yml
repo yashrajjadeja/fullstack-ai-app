@@ -1,0 +1,47 @@
+﻿# docker-compose.yml  (project root)
+# Run with: docker compose up --build
+# Stop with: docker compose down
+#
+# Three services:
+#   mongo    — official MongoDB 7 image, data persisted in a named volume
+#   backend  — Flask API built from backend/Dockerfile
+#   frontend — React app (built with Node, served by Nginx)
+#
+# IMPORTANT: secrets (MONGO_URI with passwords, etc.) must NOT appear here.
+# Use a .env file that is listed in .gitignore for local overrides, or
+# set variables in your cloud platform dashboard for production.
+
+services:
+  mongo:
+    image: mongo:7
+    # Named volume keeps the database data even after "docker compose down"
+    volumes:
+      - mongo_data:/data/db
+
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      # Inside Docker, "mongo" refers to the mongo service above, NOT localhost
+      MONGO_URI: mongodb://mongo:27017
+      DB_NAME: ai_fullstack
+      # Allow requests from the frontend container served on port 8080
+      FRONTEND_ORIGIN: http://localhost:8080
+    depends_on:
+      - mongo
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        # Bake the API URL into the React bundle at build time
+        VITE_API_URL: http://localhost:5000/api
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+
+# Declare the named volume so Docker manages the lifecycle
+volumes:
+  mongo_data:

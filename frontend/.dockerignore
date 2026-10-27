@@ -1,0 +1,4 @@
+﻿# frontend/.dockerignore
+# These folders are either rebuilt inside Docker or are output artefacts
+node_modules
+dist

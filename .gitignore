@@ -1,0 +1,14 @@
+﻿# Root .gitignore
+# Backend secrets and virtual environment
+backend/.env
+backend/.venv/
+backend/__pycache__/
+backend/*.pyc
+
+# Frontend build output and dependencies
+frontend/node_modules/
+frontend/dist/
+
+# OS / editor
+.DS_Store
+Thumbs.db
